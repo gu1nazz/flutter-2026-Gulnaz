@@ -1,4 +1,5 @@
 import 'package:chess_club/models/chess_category.dart';
+
 class ChessNight {
   final String id;
   final String title;
@@ -23,4 +24,11 @@ class ChessNight {
     this.rules,
     required this.favourite,
   });
+
+  int get playersCount => players.length;
+  int get freePlaces => boards - playersCount;
+  bool get isFull => freePlaces <= 0;
+
+  bool get isPast => startsAt.isBefore(DateTime.now());
+  bool contains(String name) => players.contains(name);
 }
