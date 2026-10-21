@@ -4,9 +4,14 @@ import '../models/chess_night.dart';
 import '../utils/format.dart';
 
 class ChessNightCard extends StatelessWidget {
-  const ChessNightCard({super.key, required this.night});
+  const ChessNightCard({
+    super.key,
+    required this.night,
+    required this.onFavourite,
+  });
 
   final ChessNight night;
+  final VoidCallback onFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,12 @@ class ChessNightCard extends StatelessWidget {
                   Text(formatDateTime(night.startsAt)),
                   Text(night.place),
                 ],
+              ),
+            ),
+            IconButton(
+              onPressed: onFavourite,
+              icon: Icon(
+                night.favourite ? Icons.favorite : Icons.favorite_border,
               ),
             ),
           ],
