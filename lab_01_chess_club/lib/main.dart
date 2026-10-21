@@ -1,7 +1,7 @@
-import 'package:chess_club/utils/format.dart';
 import 'package:flutter/material.dart';
 
 import 'data/seed.dart';
+import 'widgets/chess_night_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,10 +28,7 @@ class NightsPage extends StatelessWidget {
         itemCount: nights.length,
         itemBuilder: (context, index) {
           final night = nights[index];
-          return ListTile(
-            title: Text(night.title),
-            subtitle: Text(formatDateTime(night.startsAt)),
-          );
+          return ChessNightCard(night: night);
         },
       ),
     );
