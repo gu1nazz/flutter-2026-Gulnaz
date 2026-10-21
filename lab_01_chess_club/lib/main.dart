@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'data/seed.dart';
+import 'models/chess_category.dart';
 import 'models/chess_night.dart';
 import 'widgets/chess_night_card.dart';
 
@@ -28,9 +29,14 @@ class _NightsPageState extends State<NightsPage> {
   List<ChessNight> _nights = buildSeed();
   final _searchController = TextEditingController();
   String _query = '';
+  ChessCategory? _category;
 
   List<ChessNight> get _visible => _nights
-      .where((n) => n.title.toLowerCase().contains(_query.toLowerCase()))
+      .where(
+        (n) =>
+    n.title.toLowerCase().contains(_query.toLowerCase()) &&
+        (_category == null || n.category == _category),
+  )
       .toList();
 
   void _toggleFavourite(String id) {
@@ -74,6 +80,28 @@ class _NightsPageState extends State<NightsPage> {
               onChanged: (value) => setState(() => _query = value),
             ),
           ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                ChoiceChip(
+                  label: const Text('All'),
+                  selected: _category == null,
+                  onSelected: (_) => setState(() => _category = null),
+                ),
+                for (final c in ChessCategory.values) ...[
+                  const SizedBox(width: 8),
+                  ChoiceChip(
+                    avatar: Icon(c.icon),
+                    label: Text(c.label),
+                    selected: _category == c,
+                    onSelected: (_) => setState(() => _category = c),
+                  ),
+                ],
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: _visible.length,
@@ -91,4 +119,3 @@ class _NightsPageState extends State<NightsPage> {
     );
   }
 }
-
