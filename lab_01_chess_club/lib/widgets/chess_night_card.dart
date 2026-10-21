@@ -48,12 +48,15 @@ class ChessNightCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    night.title,
-                    maxLines: 2,
+                    formatDateTime(night.startsAt),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(formatDateTime(night.startsAt)),
-                  Text(night.place),
+                  Text(
+                    night.place,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),

@@ -146,7 +146,7 @@ class _NightsPageState extends State<NightsPage> {
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 360,
-                          childAspectRatio: 3,
+                          mainAxisExtent: 150,
                         ),
                     itemCount: items.length,
                     itemBuilder: (context, index) => _buildCard(items[index]),
