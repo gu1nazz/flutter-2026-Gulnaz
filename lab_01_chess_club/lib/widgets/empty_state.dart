@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// One empty state for the whole app: icon, message, optional button.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
