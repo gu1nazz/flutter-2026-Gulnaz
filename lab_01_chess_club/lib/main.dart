@@ -30,15 +30,23 @@ class _NightsPageState extends State<NightsPage> {
   final _searchController = TextEditingController();
   String _query = '';
   ChessCategory? _category;
+  bool _showPast = false;
 
-  List<ChessNight> get _visible => _nights
-      .where(
-        (n) =>
-    n.title.toLowerCase().contains(_query.toLowerCase()) &&
-        (_category == null || n.category == _category),
-  )
-      .toList();
-
+  List<ChessNight> get _visible {
+    final list = _nights
+        .where(
+          (n) =>
+      n.title.toLowerCase().contains(_query.toLowerCase()) &&
+          (_category == null || n.category == _category) &&
+          (_showPast || !n.isPast),
+    )
+        .toList();
+    list.sort((a, b) {
+      if (a.isPast != b.isPast) return a.isPast ? 1 : -1;
+      return a.startsAt.compareTo(b.startsAt);
+    });
+    return list;
+  }
   void _toggleFavourite(String id) {
     setState(() {
       _nights = [
@@ -99,6 +107,12 @@ class _NightsPageState extends State<NightsPage> {
                     onSelected: (_) => setState(() => _category = c),
                   ),
                 ],
+                const SizedBox(width: 8),
+                FilterChip(
+                  label: const Text('Past'),
+                  selected: _showPast,
+                  onSelected: (value) => setState(() => _showPast = value),
+                ),
               ],
             ),
           ),
