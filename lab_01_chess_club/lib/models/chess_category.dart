@@ -10,4 +10,12 @@ enum ChessCategory {
   const ChessCategory(this.label, this.icon);
   final String label;
   final IconData icon;
+
+  Color color(ColorScheme scheme) => switch (this) {
+    ChessCategory.blitz => scheme.error,
+    ChessCategory.rapid => scheme.secondary,
+    ChessCategory.puzzle => scheme.tertiary,
+    ChessCategory.lecture => scheme.primary,
+    ChessCategory.simul => scheme.primaryContainer,
+  };
 }
