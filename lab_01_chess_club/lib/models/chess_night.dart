@@ -59,4 +59,16 @@ class ChessNight {
       favourite: favourite ?? this.favourite,
     );
   }
+
+  ChessNight.empty()
+    : id = '',
+      title = '',
+      category = ChessCategory.blitz,
+      startsAt = DateTime.now(),
+      boards = 8,
+      players = const [],
+      online = false,
+      place = '',
+      rules = null,
+      favourite = false;
 }
