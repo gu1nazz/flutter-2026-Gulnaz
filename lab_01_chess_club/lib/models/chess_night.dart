@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:chess_club/models/chess_category.dart';
 
 class ChessNight {
@@ -6,7 +8,7 @@ class ChessNight {
   final ChessCategory category;
   final DateTime startsAt;
   final int boards;
-  final List<String> players;
+  final List<String> _players;
   final bool online;
   final String place;
   final String? rules;
@@ -18,14 +20,16 @@ class ChessNight {
     required this.category,
     required this.startsAt,
     required this.boards,
-    required this.players,
+    required this._players,
     required this.online,
     required this.place,
     this.rules,
     required this.favourite,
   });
 
-  int get playersCount => players.length;
+  List<String> get players => UnmodifiableListView(_players);
+
+  int get playersCount => _players.length;
   int get freePlaces => boards - playersCount;
   bool get isFull => freePlaces <= 0;
 
@@ -66,7 +70,7 @@ class ChessNight {
       category = ChessCategory.blitz,
       startsAt = DateTime.now(),
       boards = 8,
-      players = const [],
+      _players = const [],
       online = false,
       place = '',
       rules = null,
