@@ -31,4 +31,6 @@ class ChessNight {
 
   bool get isPast => startsAt.isBefore(DateTime.now());
   bool contains(String name) => players.contains(name);
+
+  ({int taken, int free}) get places => (taken: playersCount, free: freePlaces);
 }
