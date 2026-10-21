@@ -26,6 +26,12 @@ class NightsPage extends StatefulWidget {
 
 class _NightsPageState extends State<NightsPage> {
   List<ChessNight> _nights = buildSeed();
+  final _searchController = TextEditingController();
+  String _query = '';
+
+  List<ChessNight> get _visible => _nights
+      .where((n) => n.title.toLowerCase().contains(_query.toLowerCase()))
+      .toList();
 
   void _toggleFavourite(String id) {
     setState(() {
@@ -37,19 +43,52 @@ class _NightsPageState extends State<NightsPage> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('ChessClub')),
-      body: ListView.builder(
-        itemCount: _nights.length,
-        itemBuilder: (context, index) {
-          final night = _nights[index];
-          return ChessNightCard(
-            night: night,
-            onFavourite: () => _toggleFavourite(night.id),
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _query.isEmpty
+                    ? null
+                    : IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() => _query = '');
+                  },
+                ),
+              ),
+              onChanged: (value) => setState(() => _query = value),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _visible.length,
+              itemBuilder: (context, index) {
+                final night = _visible[index];
+                return ChessNightCard(
+                  night: night,
+                  onFavourite: () => _toggleFavourite(night.id),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+
