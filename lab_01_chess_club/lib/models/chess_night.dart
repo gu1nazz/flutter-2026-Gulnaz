@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:chess_club/models/chess_category.dart';
 
+import 'countdown.dart';
+
 class ChessNight {
   final String id;
   final String title;
@@ -75,4 +77,16 @@ class ChessNight {
       place = '',
       rules = null,
       favourite = false;
+
+  Countdown get countdown {
+    final now = DateTime.now();
+    if (startsAt.isAfter(now)) {
+      return Upcoming(remaining: startsAt.difference(now));
+    }
+    final elapsed = now.difference(startsAt);
+    if (elapsed < const Duration(hours: 3)) {
+      return Started(elapsed: elapsed);
+    }
+    return const Ended();
+  }
 }
