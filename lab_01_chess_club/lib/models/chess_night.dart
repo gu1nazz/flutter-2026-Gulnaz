@@ -33,4 +33,30 @@ class ChessNight {
   bool contains(String name) => players.contains(name);
 
   ({int taken, int free}) get places => (taken: playersCount, free: freePlaces);
+
+  ChessNight copyWith({
+    String? id,
+    String? title,
+    ChessCategory? category,
+    DateTime? startsAt,
+    int? boards,
+    List<String>? players,
+    bool? online,
+    String? place,
+    String? rules,
+    bool? favourite,
+  }) {
+    return ChessNight(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      category: category ?? this.category,
+      startsAt: startsAt ?? this.startsAt,
+      boards: boards ?? this.boards,
+      players: players ?? this.players,
+      online: online ?? this.online,
+      place: place ?? this.place,
+      rules: rules ?? this.rules,
+      favourite: favourite ?? this.favourite,
+    );
+  }
 }
