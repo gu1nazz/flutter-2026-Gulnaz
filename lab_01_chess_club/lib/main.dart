@@ -61,7 +61,12 @@ class _NightsPageState extends State<NightsPage> {
     _searchController.dispose();
     super.dispose();
   }
-
+  Widget _buildCard(ChessNight night) {
+    return ChessNightCard(
+      night: night,
+      onFavourite: () => _toggleFavourite(night.id),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,13 +122,24 @@ class _NightsPageState extends State<NightsPage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _visible.length,
-              itemBuilder: (context, index) {
-                final night = _visible[index];
-                return ChessNightCard(
-                  night: night,
-                  onFavourite: () => _toggleFavourite(night.id),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final items = _visible;
+                if (constraints.maxWidth >= 600) {
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(12),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 360,
+                      childAspectRatio: 3,
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => _buildCard(items[index]),
+                  );
+                }
+                return ListView.separated(
+                  itemCount: items.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 4),
+                  itemBuilder: (context, index) => _buildCard(items[index]),
                 );
               },
             ),
