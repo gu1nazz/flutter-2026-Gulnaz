@@ -4,6 +4,7 @@ import 'data/seed.dart';
 import 'models/chess_category.dart';
 import 'models/chess_night.dart';
 import 'widgets/chess_night_card.dart';
+import 'widgets/empty_state.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,10 +37,10 @@ class _NightsPageState extends State<NightsPage> {
     final list = _nights
         .where(
           (n) =>
-      n.title.toLowerCase().contains(_query.toLowerCase()) &&
-          (_category == null || n.category == _category) &&
-          (_showPast || !n.isPast),
-    )
+              n.title.toLowerCase().contains(_query.toLowerCase()) &&
+              (_category == null || n.category == _category) &&
+              (_showPast || !n.isPast),
+        )
         .toList();
     list.sort((a, b) {
       if (a.isPast != b.isPast) return a.isPast ? 1 : -1;
@@ -47,6 +48,7 @@ class _NightsPageState extends State<NightsPage> {
     });
     return list;
   }
+
   void _toggleFavourite(String id) {
     setState(() {
       _nights = [
@@ -61,12 +63,14 @@ class _NightsPageState extends State<NightsPage> {
     _searchController.dispose();
     super.dispose();
   }
+
   Widget _buildCard(ChessNight night) {
     return ChessNightCard(
       night: night,
       onFavourite: () => _toggleFavourite(night.id),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,12 +87,12 @@ class _NightsPageState extends State<NightsPage> {
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() => _query = '');
-                  },
-                ),
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => _query = '');
+                        },
+                      ),
               ),
               onChanged: (value) => setState(() => _query = value),
             ),
@@ -125,26 +129,43 @@ class _NightsPageState extends State<NightsPage> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final items = _visible;
+                if (items.isEmpty) {
+                  return EmptyState(
+                    icon: Icons.search_off,
+                    message: 'No nights match your search',
+                    actionLabel: 'Clear search',
+                    onAction: () {
+                      _searchController.clear();
+                      setState(() => _query = '');
+                    },
+                  );
+                }
                 if (constraints.maxWidth >= 600) {
                   return GridView.builder(
                     padding: const EdgeInsets.all(12),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 360,
-                      childAspectRatio: 3,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 360,
+                          childAspectRatio: 3,
+                        ),
                     itemCount: items.length,
                     itemBuilder: (context, index) => _buildCard(items[index]),
                   );
                 }
                 return ListView.separated(
                   itemCount: items.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 4),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 4),
                   itemBuilder: (context, index) => _buildCard(items[index]),
                 );
               },
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
