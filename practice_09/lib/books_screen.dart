@@ -1,45 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'cart_badge.dart';
-import 'main.dart';
+import 'models/book.dart';
+import 'models/cart.dart';
 
 class BooksScreen extends StatelessWidget {
-  const BooksScreen({
-    super.key,
-    required this.cart,
-    required this.total,
-    required this.onAdd,
-  });
-  final List<Book> cart;
-  final int total;
-  final void Function(Book) onAdd;
+  const BooksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     debugPrint('BooksScreen build');
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Books'),
-        actions: [CartBadge(count: cart.length, total: total)],
-      ),
-      body: ListView(
-        children: [
-          for (final b in books)
-            Builder(builder: (_) {
-              debugPrint('row ${b.title}');
-              return ListTile(
-                title: Text(b.title),
-                subtitle: Text(b.author),
-                trailing: cart.contains(b)
-                    ? const Text('Added')
-                    : OutlinedButton(
-                  onPressed: () => onAdd(b),
-                  child: const Text('Add'),
-                ),
-              );
-            }),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Books'), actions: const [CartBadge()]),
+      body: ListView(children: [for (final b in books) _BookRow(book: b)]),
+    );
+  }
+}
+
+class _BookRow extends StatelessWidget {
+  const _BookRow({required this.book});
+  final Book book;
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('row ${book.title}');
+    final inCart = context.watch<Cart>().items.contains(book); // watch = build
+    return ListTile(
+      title: Text(book.title),
+      subtitle: Text(book.author),
+      trailing: inCart
+          ? const Text('Added')
+          : OutlinedButton(
+              onPressed: () {
+                final ok = context.read<Cart>().add(book); // read = callback
+                if (ok) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(const SnackBar(content: Text('Added')));
+                }
+              },
+              child: const Text('Add'),
+            ),
     );
   }
 }
