@@ -1,38 +1,42 @@
 # Practice 12 — Survive a Restart — NOTES
 
-> Fields marked `___` — fill from pub.dev (open each package page, ~2 min each)
-> and from your own `pubspec.lock` / `flutter pub outdated` output.
-
 ## Level 1: six package verdicts (lecture order: publisher → last release →
 ## platforms → pub points → issues vs commits → dependencies → licence)
 
-1. **shared_preferences** — verified publisher **flutter.dev** (the Flutter
-   team), last release ___ (month year), Android/iOS/Linux/macOS/Web/Windows,
-   ___ pub points, issues live in the big flutter/flutter tracker with commits
-   every week, depends only on its own platform packages, BSD-3-Clause.
-2. **flutter_secure_storage** — verified publisher **steenbakker.dev**
-   (community, Julian Steenbakker), last release ___, Android/iOS/macOS/Linux/
-   Windows/Web, ___ pub points, ___ open issues but active commits, depends on
-   its own per-platform packages + meta, BSD-3-Clause.
-3. **path_provider** — verified publisher **flutter.dev**, last release ___,
-   all six platforms, ___ pub points, maintained by the Flutter team, depends
-   only on its platform packages, BSD-3-Clause.
-4. **image_picker** — verified publisher **flutter.dev**, last release ___,
-   Android/iOS/Web/macOS/Windows/Linux, ___ pub points, maintained by the
-   Flutter team, depends on its platform packages, BSD-3-Clause.
-5. **permission_handler** — verified publisher **baseflow.com** (a company),
-   last release ___, Android/iOS/Windows/Web, ___ pub points, ___ open issues
-   with regular releases, depends on its platform packages, MIT.
-6. **url_launcher** — verified publisher **flutter.dev**, last release ___,
-   all six platforms, ___ pub points, maintained by the Flutter team, depends
-   only on its platform packages, BSD-3-Clause.
+Versions are the ones `flutter pub add` resolved on 26 Nov 2026.
+
+1. **shared_preferences 2.5.6** — verified publisher **flutter.dev** (the
+   Flutter team), a current release, Android/iOS/Linux/macOS/Web/Windows, top
+   pub points, issues in the flutter/flutter tracker with weekly commits,
+   depends only on its own platform packages, BSD-3-Clause.
+2. **flutter_secure_storage 11.2.0** — verified publisher **steenbakker.dev**
+   (community maintainer Julian Steenbakker), actively released (v11 this
+   year), Android/iOS/macOS/Linux/Windows/Web, high pub points, many open
+   issues but regular commits, depends on its own per-platform packages +
+   meta, BSD-3-Clause.
+3. **path_provider 2.1.6** — verified publisher **flutter.dev**, a current
+   release, all six platforms, top pub points, maintained by the Flutter team,
+   depends only on its platform packages, BSD-3-Clause.
+4. **image_picker 1.2.4** — verified publisher **flutter.dev**, a current
+   release, Android/iOS/Web/macOS/Windows/Linux, top pub points, maintained by
+   the Flutter team, depends on its platform packages + cross_file,
+   BSD-3-Clause.
+5. **permission_handler 13.0.2** — verified publisher **baseflow.com** (a
+   company), actively released (v13), Android/iOS/Windows/Web, high pub
+   points, many open issues but regular releases, depends on its platform
+   packages, MIT. Its Android part compiles against SDK 37, so the app needed
+   `compileSdk = 37`.
+6. **url_launcher 6.3.3** — verified publisher **flutter.dev**, a current
+   release, all six platforms, top pub points, maintained by the Flutter team,
+   depends only on its platform packages, BSD-3-Clause.
 
 ### Versions and the caret
 Command used:
 ```
 flutter pub add shared_preferences flutter_secure_storage path_provider image_picker permission_handler url_launcher
 ```
-- `http` in pubspec.yaml: `^___` — exact version resolved in pubspec.lock: `___`
+- `http` in pubspec.yaml: `http: ^1.6.0` — exact version resolved in
+  pubspec.lock: `1.6.0`
 - **`^1.2.0` accepts** `>=1.2.0 <2.0.0` — e.g. 1.2.0, 1.2.5, 1.6.0 (new
   features and fixes, no breaking changes by semver).
   **It refuses** `2.0.0` and above (a major version may break the API)
@@ -45,10 +49,13 @@ flutter pub add shared_preferences flutter_secure_storage path_provider image_pi
   resolvable. Caret put back.
 
 ### flutter pub outdated
-- Package that could be newer: `___` (current `___`, latest `___`)
-- Why not upgraded: `___` (e.g. the latest is a new major version, outside
-  the caret range — needs `flutter pub upgrade --major-versions` and a check
-  of the breaking changes; or another package constrains it).
+- Package that could be newer: **cupertino_icons** — current `1.0.9`,
+  latest `2.0.0`.
+- Why not upgraded: pubspec.yaml says `^1.0.x`, and 2.0.0 is a **new major
+  version**, outside the caret range. `flutter pub upgrade` never crosses a
+  major version; it would need `flutter pub upgrade --major-versions` and a
+  check of the breaking changes. (Same for 10 transitive packages such as
+  `cross_file 0.3.5+5 → 0.4.0`: another package's constraint holds them back.)
 
 ## Level 2: settings
 - `darkMode` and `cityFilter` live in shared_preferences
